@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Company Database Dashboard</title>
+    <style>
+        /* General styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+        .navbar {
+            background-color: #4CAF50;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .dashboard-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 250px;
+            text-align: center;
+        }
+        .card h2 {
+            color: #4CAF50;
+            margin: 0 0 10px;
+        }
+        .card p {
+            color: #666;
+            margin: 0 0 20px;
+        }
+        .card a {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .card a:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <h1>Company Database Dashboard</h1>
+    </div>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard-container">
+        <div class="card">
+            <h2>Employees</h2>
+            <p>Manage employee data including viewing, updating, and deleting records.</p>
+            <a href="{{ url_for('view_employees') }}">Go to Employees</a>
+        </div>
+
+        <div class="card">
+            <h2>Departments</h2>
+            <p>Manage department data including adding, updating, and deleting records.</p>
+            <a href="{{ url_for('view_departments') }}">Go to Departments</a>
+        </div>
+
+        <div class="card">
+            <h2>Projects</h2>
+            <p>Manage project data across various departments.</p>
+            <a href="{{ url_for('view_projects') }}">Go to Projects</a>
+        </div>
+<div class="card">
+    <h2>Joined Data</h2>
+    <p>View combined information from Employees, Departments, and Projects.</p>
+    <a href="{{ url_for('view_joined_data') }}">Go to Joined Data</a>
+</div>
+
+    </div>
+
+</body>
+</html>
+
