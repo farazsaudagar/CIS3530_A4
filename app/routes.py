@@ -1,25 +1,6 @@
-from flask import Flask, render_template, request, redirect, url_for
-import psycopg2
-
-app = Flask(__name__)
-
-# Database configuration for PostgreSQL
-# Database configuration for PostgreSQL
-DATABASE_CONFIG = {
-    "dbname": "YOUR DB NAME FOR THIS PROJECT",
-    "user": "YOUR DB USERNAME", # probably it is postgres
-    "password": "YOUR DB PASSWORD",  # be careful about where you save the password for real projects
-    "host": "localhost",
-    "port": "5432"
-}
-
-# Function to get a database connection
-
-
-def get_db_connection():
-    conn = psycopg2.connect(**DATABASE_CONFIG)
-    return conn
-
+from flask import render_template, request, redirect, url_for
+from app import app
+from app.db import get_db_connection
 
 # Route to view all employees
 @app.route('/employees')
@@ -233,7 +214,3 @@ def view_joined_data():
     conn.close()
 
     return render_template('joined_data.html', joined_data=joined_data)
-
-
-if __name__ == "__main__":
-    app.run(debug=True)

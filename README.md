@@ -16,3 +16,8 @@ If you install additional packages during development, update the requirements f
 ```bash
 pip freeze > requirements.txt
 ```
+
+To run this program:
+```bash
+python run.py
+```
