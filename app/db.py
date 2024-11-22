@@ -5,7 +5,7 @@ import psycopg2
 DATABASE_CONFIG = {
     "dbname": "company",
     "user": "postgres", # probably it is postgres
-    "password": "Fyrezisgr8",  # be careful about where you save the password for real projects
+    "password": "",  # be careful about where you save the password for real projects
     "host": "localhost",
     "port": "5433"
 }
