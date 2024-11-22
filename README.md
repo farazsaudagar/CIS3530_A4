@@ -1,7 +1,18 @@
 # CIS3530_A4
+## Getting Started
 
-## To get started developing, clone this repository and run source path/to/venv/bin/activate
+- Clone this repository
+- Activate the virtual environment:
+```bash
+source path/to/venv/bin/activate
+```
+- Install required packages:
+```bash
+python install -r requirements.txt
+```
 
-## Then, run this command: python install -r requirements.txt
-
-### If you are downloading more packages using pip, run this command once to store it in requirements.txt: pip freeze > requirements.txt
+## Development Notes
+If you install additional packages during development, update the requirements file by running:
+```bash
+pip freeze > requirements.txt
+```
