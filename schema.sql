@@ -375,3 +375,27 @@ INSERT INTO Works_On VALUES
 ('550561234', 118, 32);
 
 
+CREATE TABLE users ( user_id SERIAL PRIMARY KEY, username VARCHAR(50) UNIQUE NOT NULL, password VARCHAR(255) NOT NULL, role VARCHAR(20) NOT NULL);  -- 'admin' or 'user' ); <-- I used this table setup from the new lab9 README and added in a department_id column
+
+-- Create Roles table
+CREATE TABLE roles (
+    role_id SERIAL PRIMARY KEY,
+    role_name VARCHAR(50) UNIQUE NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create User_Roles junction table for many-to-many relationship
+CREATE TABLE user_roles (
+    user_id INT NOT NULL,
+    role_id INT NOT NULL,
+    assigned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, role_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (role_id) REFERENCES roles(role_id) ON DELETE CASCADE
+);
+
+INSERT INTO roles (role_name, description) VALUES
+('super_admin', 'Has full access to all system features and data'),
+('department_admin', 'Can manage employees and data within their assigned department'),
+('normal_user', 'Can view data related to their department only');
