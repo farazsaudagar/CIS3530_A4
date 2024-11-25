@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Users</title>
+</head>
+<body>
+    <h1>Manage Users</h1>
+    <a href="{{ url_for('index') }}" style="text-decoration: none; color: #4CAF50; font-weight: bold;">⬅ Back to 
+        Dashboard</a>
+    <a href="{{ url_for('create_user') }}">Create New User</a>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>User ID</th>
+                <th>Username</th>
+                <th>Role</th>
+                <th>Department</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user[0] }}</td>
+                <td>{{ user[1] }}</td>
+                <td>{{ user[2] }}</td>
+                <td>{{ user[3] or 'N/A' }}</td>
+                <td>
+                    {% if user[0] != current_user.id %}
+                        <form action="{{ url_for('delete_user', user_id=user[0]) }}" method="POST" style="display:inline;">
+                            <button type="submit">Delete</button>
+                        </form>
+                        <a href="{{ url_for('update_user_role', user_id=user[0]) }}">Edit Role</a>
+                    {% else %}
+                        <em>(You)</em>
+                    {% endif %}
+                </td>                
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

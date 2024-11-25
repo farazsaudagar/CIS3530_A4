@@ -374,6 +374,10 @@ INSERT INTO Works_On VALUES
 ('460836586', 118, 26),
 ('550561234', 118, 32);
 
+DROP TABLE IF EXISTS user_roles;
+DROP TABLE IF EXISTS roles;
+DROP TABLE IF EXISTS users;
+
 
 CREATE TABLE users ( user_id SERIAL PRIMARY KEY, 
     username VARCHAR(50) UNIQUE NOT NULL, 
@@ -399,6 +403,9 @@ CREATE TABLE user_roles (
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
     FOREIGN KEY (role_id) REFERENCES roles(role_id) ON DELETE CASCADE
 );
+
+ALTER TABLE user_roles ADD CONSTRAINT user_role_unique UNIQUE (user_id);
+
 
 INSERT INTO roles (role_name, description) VALUES
 ('super_admin', 'Has full access to all system features and data'),

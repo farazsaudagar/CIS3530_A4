@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update User Role</title>
+</head>
+<body>
+    <h1>Update Role for {{ user[0] }}</h1>
+    <form method="POST">
+        <label for="role">Role:</label>
+        <select name="role" id="role" required>
+            <option value="super_admin" {% if user[1] == 'super_admin' %}selected{% endif %}>Super Admin</option>
+            <option value="department_admin" {% if user[1] == 'department_admin' %}selected{% endif %}>Department Admin</option>
+            <option value="normal_user" {% if user[1] == 'normal_user' %}selected{% endif %}>Normal User</option>
+        </select>
+        <button type="submit">Update Role</button>
+    </form>
+    <a href="{{ url_for('view_users') }}">Back to Users</a>
+</body>
+</html>

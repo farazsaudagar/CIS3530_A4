@@ -119,6 +119,14 @@
                 <a href="{{ url_for('view_joined_data') }}">Go to Joined Data</a>
             </div>
         {% endif %}
+
+        {% if current_user.role == 'super_admin' %}
+            <div class="card">
+                <h2>Users</h2>
+                <p>View and manage all user accounts.</p>
+                <a href="{{ url_for('view_users') }}">Go to Users</a>
+            </div>
+        {% endif %}
     </div>
 </body>
 </html>
