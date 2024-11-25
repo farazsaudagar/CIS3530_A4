@@ -375,7 +375,12 @@ INSERT INTO Works_On VALUES
 ('550561234', 118, 32);
 
 
-CREATE TABLE users ( user_id SERIAL PRIMARY KEY, username VARCHAR(50) UNIQUE NOT NULL, password VARCHAR(255) NOT NULL, role VARCHAR(20) NOT NULL);  -- 'admin' or 'user' ); <-- I used this table setup from the new lab9 README and added in a department_id column
+CREATE TABLE users ( user_id SERIAL PRIMARY KEY, 
+    username VARCHAR(50) UNIQUE NOT NULL, 
+    password VARCHAR(255) NOT NULL, 
+    role VARCHAR(20) NOT NULL, 
+    department_id int
+);  
 
 -- Create Roles table
 CREATE TABLE roles (
