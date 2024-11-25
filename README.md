@@ -8,7 +8,7 @@ source path/to/venv/bin/activate
 ```
 - Install required packages:
 ```bash
-python install -r requirements.txt
+pip install -r requirements.txt
 ```
 
 ## Development Notes
