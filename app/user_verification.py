@@ -68,6 +68,7 @@ def login():
             user = User(id=user_data[0], username=user_data[1],
                         password=user_data[2], role=user_data[3], department_id=user_data[4])
             login_user(user)
+            print(f"User logged in with role: {user.role}") 
             return redirect(url_for('index'))
         else:
             flash('Invalid username or password', 'danger')

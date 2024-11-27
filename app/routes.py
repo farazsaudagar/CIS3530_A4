@@ -26,6 +26,7 @@ def allowed_file(filename):
 def view_employees():
     conn = get_db_connection()
     cursor = conn.cursor()
+    print(current_user.role)
     if current_user.role == 'super_admin':
         cursor.execute("SELECT SSN, Fname, Lname, Salary FROM Employee")
     else:
@@ -33,7 +34,7 @@ def view_employees():
     employees = cursor.fetchall()
     cursor.close()
     conn.close()
-    return render_template('employees.html', employees=employees)
+    return render_template('employees.html', employees=employees, user_role=current_user.role)
 
 
 
@@ -112,7 +113,7 @@ def view_departments():
     departments = cursor.fetchall()
     cursor.close()
     conn.close()
-    return render_template('departments.html', departments=departments)
+    return render_template('departments.html', departments=departments, user_role=current_user.role)
 
 
 @app.route('/departments/add', methods=('GET', 'POST'))
@@ -232,7 +233,7 @@ def view_projects():
     projects = cursor.fetchall()
     cursor.close()
     conn.close()
-    return render_template('projects.html', projects=projects)
+    return render_template('projects.html', projects=projects, user_role=current_user.role)
 
 # Route to add a new project
 
