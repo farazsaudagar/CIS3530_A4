@@ -86,48 +86,85 @@ def register():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        # Add a dropdown or other input for role in the form
         role = request.form['role']
+        department_name = request.form['department']  # Get the department name from the form
 
-        # Connect to the database
         conn = get_db_connection()
         cur = conn.cursor()
 
-        # Check if username already exists
-        cur.execute("SELECT * FROM users WHERE username = %s", (username,))
-        if cur.fetchone():
-            flash('Username already exists!', 'danger')
+        try:
+            # Check if username already exists
+            cur.execute("SELECT * FROM users WHERE username = %s", (username,))
+            if cur.fetchone():
+                flash('Username already exists!', 'danger')
+                return redirect(url_for('register'))
+
+            # Look up the department ID (Dnumber) based on the department name
+            cur.execute("SELECT Dnumber FROM Department WHERE Dname = %s", (department_name,))
+            department = cur.fetchone()
+
+            if not department:
+                flash('Invalid department selected.', 'danger')
+                return redirect(url_for('register'))
+
+            department_id = department[0]  # Extract the Dnumber
+
+            # Hash the password and insert the new user
+            hashed_password = generate_password_hash(password)
+            cur.execute(
+                "INSERT INTO users (username, password, role, department_id) VALUES (%s, %s, %s, %s)",
+                (username, hashed_password, role, department_id)
+            )
+
+            # Retrieve the newly created user's ID
+            cur.execute("SELECT user_id FROM users WHERE username = %s", (username,))
+            user_id = cur.fetchone()[0]
+            time_now = datetime.datetime.now()
+
+            # Insert the user's role into the user_roles table
+            if role == 'super_admin':
+                role_id = 1
+            elif role == 'department_admin':
+                role_id = 2
+            elif role == 'normal_user':
+                role_id = 3
+            else:
+                flash('Invalid role selected.', 'danger')
+                return redirect(url_for('register'))
+
+            cur.execute(
+                "INSERT INTO user_roles (user_id, role_id, assigned_at) VALUES (%s, %s, %s)",
+                (user_id, role_id, time_now)
+            )
+
+            # Commit the transaction
+            conn.commit()
+            flash('Registration successful! You can now log in.', 'success')
+
+        except Exception as e:
+            flash(f"An error occurred: {e}", 'danger')
+            conn.rollback()
+        finally:
             cur.close()
             conn.close()
-            return redirect(url_for('register'))
 
-        # Hash the password and insert new user
-        hashed_password = generate_password_hash(password)
-        cur.execute("INSERT INTO users (username, password, role) VALUES (%s, %s, %s)",
-                    (username, hashed_password, role))
-        
-        cur.execute("SELECT user_id FROM users WHERE username = %s", (username,))
-        user_id = cur.fetchone()
-        timeNow = datetime.datetime.now()
-
-        if role == 'super_admin':
-            cur.execute("INSERT INTO user_roles (user_id, role_id, assigned_at) VALUES (%s, %s, %s)",
-                    (user_id, 1, timeNow))
-
-        elif role == 'department_admin':
-            cur.execute("INSERT INTO user_roles (user_id, role_id, assigned_at) VALUES (%s, %s, %s)",
-                    (user_id, 2, timeNow))
-            
-        elif role == 'normal_user':
-            cur.execute("INSERT INTO user_roles (user_id, role_id, assigned_at) VALUES (%s, %s, %s)",
-                    (user_id, 3, timeNow))
-
-        conn.commit()
-
-        cur.close()
-        conn.close()
-
-        flash('Registration successful! You can now log in.', 'success')
         return redirect(url_for('login'))
 
     return render_template('register.html')
+
+
+
+@app.before_request
+def set_pg_session_user():
+    if current_user.is_authenticated:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        try:
+            # Set the session variable for the current user
+            cur.execute("SET myapp.current_user_id = %s", (current_user.id,))
+            conn.commit()
+        except Exception as e:
+            app.logger.error(f"Failed to set PostgreSQL session variable: {e}")
+        finally:
+            cur.close()
+            conn.close()

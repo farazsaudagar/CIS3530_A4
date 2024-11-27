@@ -445,3 +445,35 @@ SELECT e.Fname, e.Lname, e.Salary, d.Dname, p.Pname, p.Plocation, d.Dnumber
 FROM Employee e
 JOIN Department d ON e.Dno = d.Dnumber
 JOIN Project p ON d.Dnumber = p.Dnum;
+
+
+-- Enable RLS on Employee table
+ALTER TABLE Employee ENABLE ROW LEVEL SECURITY;
+ALTER TABLE Employee FORCE ROW LEVEL SECURITY;
+
+-- Revoke public access
+REVOKE ALL ON Employee FROM public;
+
+-- Grant permissions
+GRANT SELECT ON Employee TO normal_user;
+GRANT SELECT, INSERT, UPDATE, DELETE ON Employee TO department_admin;
+GRANT SELECT, INSERT, UPDATE, DELETE ON Employee TO postgres;  -- Superuser role
+
+-- Normal User Policy: View only within their department
+CREATE POLICY normal_user_view_policy
+ON Employee
+FOR SELECT
+USING (
+    Dno = (SELECT department_id FROM users WHERE user_id = current_setting('myapp.current_user_id')::int)
+);
+
+-- Department Admin Policy: View and modify within their department
+CREATE POLICY department_admin_policy
+ON Employee
+FOR ALL
+USING (
+    Dno = (SELECT department_id FROM users WHERE user_id = current_setting('myapp.current_user_id')::int)
+)
+WITH CHECK (
+    Dno = (SELECT department_id FROM users WHERE user_id = current_setting('myapp.current_user_id')::int)
+);

@@ -47,7 +47,37 @@
     <div class="navbar">
         <h1>Joined Data of Employees, Departments, and Projects</h1>
     </div>
-
+    <form method="get" action="{{ url_for('view_joined_data') }}" style="text-align: center; margin: 20px;">
+        <label for="department">Department:</label>
+        <select name="department">
+            <option value="">All</option>
+            {% for department in departments %}
+            <option value="{{ department[0] }}" {% if request.args.get('department') == department[0] %}selected{% endif %}>
+                {{ department[1] }}
+            </option>
+            {% endfor %}
+        </select>
+    
+        <label for="project">Project:</label>
+        <input type="text" name="project" value="{{ request.args.get('project', '') }}">
+    
+        <label for="min_salary">Min Salary:</label>
+        <input type="number" name="min_salary" value="{{ request.args.get('min_salary', '') }}">
+    
+        <label for="max_salary">Max Salary:</label>
+        <input type="number" name="max_salary" value="{{ request.args.get('max_salary', '') }}">
+    
+        <button type="submit" style="background-color: #4CAF50; color: white; padding: 5px 10px; border: none; border-radius: 5px; cursor: pointer;">
+            Filter
+        </button>
+    
+        <!-- Add Download Button -->
+        <a href="{{ url_for('download_joined_data', **request.args) }}" style="background-color: #4CAF50; color: white; padding: 5px 10px; text-decoration: none; border-radius: 5px; margin-left: 10px;">
+            Download to Excel
+        </a>
+    </form>
+    
+    
     <table>
         <tr>
             <th>First Name</th>

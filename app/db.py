@@ -4,11 +4,12 @@ import psycopg2
 # Database configuration for PostgreSQL
 DATABASE_CONFIG = {
     "dbname": "company",
-    "user": "postgres", # probably it is postgres
-    "password": "",  # be careful about where you save the password for real projects
+    "user": "postgres",  
+    "password": "",
     "host": "localhost",
     "port": "5432"
 }
+
 
 # Function to get a database connection
 
