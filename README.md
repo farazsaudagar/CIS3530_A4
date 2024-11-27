@@ -26,9 +26,6 @@ Follow the steps to configure the PostgreSQL database:
 1. Access the PostgreSQL:
 ```bash
 psql postgres
-# psql -U postgres -c "drop database company;"
-# psql -U postgres -c "create database company;"
-# psql -U postgres -d company -f schema.sql 
 ```
 2. Create database:
 ```bash
@@ -59,6 +56,6 @@ This project includes all assignment features, including the bonus.
 #### Bonus Feature: File Upload
 To use the upload feature, upload a file with:
 
-A name that matches the table you want to push data into.
-The same column headers and data types as defined in the database schema.
-Ensure the data aligns with the database structure to avoid errors.
+- A name that matches the table you want to push data into.
+- The same column headers and data types as defined in the database schema.
+- Ensure the data aligns with the database structure to avoid errors.
