@@ -113,7 +113,8 @@ def view_departments():
     departments = cursor.fetchall()
     cursor.close()
     conn.close()
-    return render_template('departments.html', departments=departments, user_role=current_user.role)
+    
+    return render_template('departments.html', departments=departments)
 
 
 @app.route('/departments/add', methods=('GET', 'POST'))
@@ -233,7 +234,7 @@ def view_projects():
     projects = cursor.fetchall()
     cursor.close()
     conn.close()
-    return render_template('projects.html', projects=projects, user_role=current_user.role)
+    return render_template('projects.html', projects=projects)
 
 # Route to add a new project
 
