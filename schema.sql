@@ -411,3 +411,37 @@ INSERT INTO roles (role_name, description) VALUES
 ('super_admin', 'Has full access to all system features and data'),
 ('department_admin', 'Can manage employees and data within their assigned department'),
 ('normal_user', 'Can view data related to their department only');
+
+-- Drop views if already exists
+DROP VIEW IF EXISTS DepartmentEmployee;
+DROP VIEW IF EXISTS DepartmentView;
+DROP VIEW IF EXISTS DepartmentProject;
+DROP VIEW IF EXISTS DepartmentJoinedData;
+
+-- View for Employees per department
+CREATE OR REPLACE VIEW DepartmentEmployee AS
+SELECT DISTINCT e.SSN, e.Fname, e.Lname, e.Salary, e.Dno
+FROM Employee e
+JOIN users u ON e.Dno = u.department_id
+WHERE u.role = 'normal_user' OR u.role = 'department_admin';
+
+-- View for Departments
+CREATE OR REPLACE VIEW DepartmentView AS
+SELECT DISTINCT d.Dnumber, d.Dname, d.Mgr_ssn
+FROM Department d
+JOIN users u ON d.Dnumber = u.department_id
+WHERE u.role = 'normal_user' OR u.role = 'department_admin';
+
+-- View for Projects per department
+CREATE OR REPLACE VIEW DepartmentProject AS
+SELECT DISTINCT p.Pnumber, p.Pname, p.Plocation, p.Dnum
+FROM Project p
+JOIN users u ON p.Dnum = u.department_id
+WHERE u.role = 'normal_user' OR u.role = 'department_admin';
+
+-- View for Joined data per department
+CREATE OR REPLACE VIEW DepartmentJoinedData AS
+SELECT e.Fname, e.Lname, e.Salary, d.Dname, p.Pname, p.Plocation, d.Dnumber
+FROM Employee e
+JOIN Department d ON e.Dno = d.Dnumber
+JOIN Project p ON d.Dnumber = p.Dnum;
