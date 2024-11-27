@@ -3,7 +3,7 @@ import psycopg2
 # Database configuration for PostgreSQL
 # Database configuration for PostgreSQL
 DATABASE_CONFIG = {
-    "dbname": "",
+    "dbname": "company",
     "user": "postgres", # probably it is postgres
     "password": "",  # be careful about where you save the password for real projects
     "host": "localhost",

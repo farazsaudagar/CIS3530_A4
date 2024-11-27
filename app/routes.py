@@ -1,17 +1,23 @@
 from flask import render_template, request, redirect, url_for
+from flask_login import current_user
 from app import app
 from app.db import get_db_connection
 
 # Route to view all employees
+
 @app.route('/employees')
 def view_employees():
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT SSN, Fname, Lname, Salary FROM Employee")
+    if current_user.role == 'super_admin':
+        cursor.execute("SELECT SSN, Fname, Lname, Salary FROM Employee")
+    else:
+        cursor.execute("SELECT DISTINCT SSN, Fname, Lname, Salary FROM DepartmentEmployee WHERE Dno = %s", (current_user.department_id,))
     employees = cursor.fetchall()
     cursor.close()
     conn.close()
     return render_template('employees.html', employees=employees)
+
 
 
 @app.route('/')
@@ -54,7 +60,10 @@ def update_salary(ssn):
 def view_departments():
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT Dnumber, Dname, Mgr_ssn FROM Department")
+    if current_user.role == 'super_admin':
+        cursor.execute("SELECT Dnumber, Dname, Mgr_ssn FROM Department")
+    else:
+        cursor.execute("SELECT DISTINCT Dnumber, Dname, Mgr_ssn FROM DepartmentView WHERE Dnumber = %s", (current_user.department_id,)) 
     departments = cursor.fetchall()
     cursor.close()
     conn.close()
@@ -125,7 +134,10 @@ def delete_department(dnumber):
 def view_projects():
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT Pnumber, Pname, Plocation, Dnum FROM Project")
+    if current_user.role == 'super_admin':
+        cursor.execute("SELECT Pnumber, Pname, Plocation, Dnum FROM Project")
+    else:
+        cursor.execute("SELECT DISTINCT Pnumber, Pname, Plocation, Dnum FROM DepartmentProject WHERE Dnum = %s", (current_user.department_id,))
     projects = cursor.fetchall()
     cursor.close()
     conn.close()
@@ -200,14 +212,21 @@ def view_joined_data():
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    # Example SQL join query to fetch data from Employee, Department, and Project tables
-    cursor.execute("""
-        SELECT e.Fname, e.Lname, e.Salary, d.Dname, p.Pname, p.Plocation
-        FROM Employee e
-        JOIN Department d ON e.Dno = d.Dnumber
-        JOIN Project p ON d.Dnumber = p.Dnum
-        ORDER BY e.Lname, e.Fname;
-    """)
+    if current_user.role == "super_admin":
+        cursor.execute("""
+            SELECT e.Fname, e.Lname, e.Salary, d.Dname, p.Pname, p.Plocation
+            FROM Employee e
+            JOIN Department d ON e.Dno = d.Dnumber
+            JOIN Project p ON d.Dnumber = p.Dnum
+            ORDER BY e.Lname, e.Fname;
+        """)
+    else:
+        cursor.execute("""
+            SELECT DISTINCT Fname, Lname, Salary, Dname, Pname, Plocation, Dnumber
+            FROM DepartmentJoinedData
+            WHERE Dnumber = %s
+            ORDER BY Lname, Fname;
+            """, (current_user.department_id,))
 
     joined_data = cursor.fetchall()
     cursor.close()
