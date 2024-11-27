@@ -46,7 +46,7 @@ def index():
     employees = cursor.fetchall()
     cursor.close()
     conn.close()
-    return render_template('index.html', employees=employees)
+    return render_template('base.html', employees=employees)
 
 
 from flask import session, flash, redirect, url_for
@@ -114,7 +114,7 @@ def view_departments():
     cursor.close()
     conn.close()
     
-    return render_template('departments.html', departments=departments)
+    return render_template('departments.html', departments=departments, user_role=current_user.role)
 
 
 @app.route('/departments/add', methods=('GET', 'POST'))
@@ -234,7 +234,7 @@ def view_projects():
     projects = cursor.fetchall()
     cursor.close()
     conn.close()
-    return render_template('projects.html', projects=projects)
+    return render_template('projects.html', projects=projects, user_role=current_user.role)
 
 # Route to add a new project
 
