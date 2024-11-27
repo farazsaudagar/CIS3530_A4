@@ -100,15 +100,18 @@ def register():
                 flash('Username already exists!', 'danger')
                 return redirect(url_for('register'))
 
-            # Look up the department ID (Dnumber) based on the department name
-            cur.execute("SELECT Dnumber FROM Department WHERE Dname = %s", (department_name,))
-            department = cur.fetchone()
+            # Handle department logic based on role
+            department_id = None
+            if role != 'super_admin':
+                # Look up the department ID (Dnumber) based on the department name
+                cur.execute("SELECT Dnumber FROM Department WHERE Dname = %s", (department_name,))
+                department = cur.fetchone()
 
-            if not department:
-                flash('Invalid department selected.', 'danger')
-                return redirect(url_for('register'))
+                if not department:
+                    flash('Invalid department selected.', 'danger')
+                    return redirect(url_for('register'))
 
-            department_id = department[0]  # Extract the Dnumber
+                department_id = department[0]  # Extract the Dnumber
 
             # Hash the password and insert the new user
             hashed_password = generate_password_hash(password)
