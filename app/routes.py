@@ -46,7 +46,7 @@ def index():
     employees = cursor.fetchall()
     cursor.close()
     conn.close()
-    return render_template('index.html', employees=employees)
+    return render_template('base.html', employees=employees)
 
 
 from flask import session, flash, redirect, url_for
